@@ -17,6 +17,8 @@ import org.testng.annotations.BeforeTest;
 
 public class BaseClass {
 	protected static WebDriver driver;
+	protected static String chromeDriverName; //added this driver to project location
+	protected static String firefoxDriverName; //added this driver to project location
 	private static final String OS = System.getProperty("os.name").toLowerCase();
 
 	String systemPlatform;
@@ -24,16 +26,16 @@ public class BaseClass {
 	@BeforeTest
 	public void setup() {
 
-		getOSPlatform();
-
+		setWebDriverNames();
+		
 		//Firefox browser
-		//		System.setProperty("webdriver.gecko.driver", "geckodriver.exe");
-		//		driver = new FirefoxDriver();
-
+		//System.setProperty("webdriver.gecko.driver", firefoxDriverName);
+		//driver = new FirefoxDriver();
+		
 		//Chrome browser
-		System.setProperty("webdriver.chrome.driver", "chromedriver.exe");
+		System.setProperty("webdriver.chrome.driver", chromeDriverName);
 		driver = new ChromeDriver();
-
+		
 		String url = "https://testing.staging-api.mindshare.io/";
 		driver.get(url);
 
@@ -59,6 +61,23 @@ public class BaseClass {
 		String browserName = caps.getBrowserName();
 		String browserVersion = caps.getVersion();
 		return browserName + " " + browserVersion;
+	}
+	
+	public void setWebDriverNames() {
+		getOSPlatform();
+		
+		switch (systemPlatform) {
+		case "_Win":
+			chromeDriverName = "chromedriver.exe";
+			firefoxDriverName = "geckodriver.exe";
+			break;
+		case "_Mac":
+			chromeDriverName = "chromedriver";
+			firefoxDriverName = "geckodriver";
+			break;
+		default: break;
+		}
+		
 	}
 
 	public void screenshot(String screenshotPath, String folderName) {
@@ -86,7 +105,7 @@ public class BaseClass {
 
 		case "_Mac":
 			screenshotPath = screenshotPath.replace("\\", "/");
-			parentFolderPath = screenshotPath + "/" + folderName;
+			parentFolderPath = screenshotPath + "/" + browserInfo;
 			parentFolder = new File(parentFolderPath);
 			childFolderPath = parentFolder + "/" + folderName;
 			childFolder = new File(childFolderPath);
