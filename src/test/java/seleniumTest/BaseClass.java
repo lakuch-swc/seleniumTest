@@ -3,21 +3,28 @@ package seleniumTest;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 
 public class BaseClass {
 	protected static WebDriver driver;
-	
+	protected static String chromeDriverName; //added this driver to project location
+	protected static String firefoxDriverName; //added this driver to project location
+	private static final String OS = System.getProperty("os.name").toLowerCase();
+
+	private String systemPlatform;
+
 	@BeforeTest
 	public void setup() {
 		
-		// Firefox browser
-		//System.setProperty("webdriver.gecko.driver", "geckodriver.exe");
-		//driver = new FirefoxDriver();
+		//Firefox browser
+//		System.setProperty("webdriver.gecko.driver", firefoxDriverName);
+//		driver = new FirefoxDriver();
 		
-		// Chrome browser
-		System.setProperty("webdriver.chrome.driver", "chromedriver.exe");
+		//Chrome browser
+		System.setProperty("webdriver.chrome.driver", chromeDriverName);
 		driver = new ChromeDriver();
 		
 		String url = "https://testing.staging-api.mindshare.io/";

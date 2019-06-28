@@ -11,11 +11,11 @@ import org.testng.annotations.Test;
 
 public class SearchTest extends BaseClass {
 	
-	File userFile = new File("users.txt");
-	String screenshotLocation = System.getProperty("user.home") + "\\Desktop";
-	String folderName = Long.toString(System.currentTimeMillis()) + "-searchTest";
-	String userName = "willisstudenttest+ws001@gmail.com";
-	String userPassword = "1P@ssw0rd";
+	private File userFile = new File("users.txt");
+	private String screenshotLocation = System.getProperty("user.home") + "\\Desktop";
+	private String folderName = Long.toString(System.currentTimeMillis()) + "-searchTest";
+	private String userName = "willisstudenttest+ws001@gmail.com";
+	private String userPassword = "1P@ssw0rd";
 	
 	@Test
 	public void searchTextFileForUsers() throws IOException {
