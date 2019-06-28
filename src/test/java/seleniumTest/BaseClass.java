@@ -12,11 +12,11 @@ public class BaseClass {
 	@BeforeTest
 	public void setup() {
 		
-		//Firefox browser
-//		System.setProperty("webdriver.gecko.driver", "geckodriver.exe");
-//		driver = new FirefoxDriver();
+		// Firefox browser
+		//System.setProperty("webdriver.gecko.driver", "geckodriver.exe");
+		//driver = new FirefoxDriver();
 		
-		//Chrome browser
+		// Chrome browser
 		System.setProperty("webdriver.chrome.driver", "chromedriver.exe");
 		driver = new ChromeDriver();
 		
@@ -40,4 +40,22 @@ public class BaseClass {
 		driver.findElement(By.className("fa-power-off")).click();
 	}
 	
+    public int getRandomAlias(){
+        int max = 1000;
+        int min = 1;
+        int range = max - min + 1;
+        int alias = (int)(Math.random() * range) + min;
+        return alias;
+    }
+
+    public String getRandomUserName(){
+        String testUserName = "Test" + getRandomAlias();
+        return testUserName;
+    }
+
+    public String getPassword(){
+        String password = "Te$tTe$t123";
+        return password;
+    }
+ 
 }
