@@ -11,7 +11,6 @@ import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
@@ -38,7 +37,6 @@ public class BaseClass {
 		
 		String url = "https://testing.staging-api.mindshare.io/";
 		driver.get(url);
-
 	}
 
 	@AfterTest
@@ -77,7 +75,6 @@ public class BaseClass {
 			break;
 		default: break;
 		}
-		
 	}
 
 	public void screenshot(String screenshotPath, String folderName) {
