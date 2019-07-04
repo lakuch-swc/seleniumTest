@@ -6,7 +6,11 @@ import org.openqa.selenium.By;
 import org.testng.annotations.Test;
 
 public class UserRegistrationTest extends BaseClass {
-
+	
+    //Declare screenshots paths and locations
+	private String screenshotLocation = System.getProperty("user.home") + "/Desktop"; 
+	private String folderName = Long.toString(System.currentTimeMillis()) + "-UserRegistration";
+    
 	@Test
 	public void userReistrationTest() throws IOException, InterruptedException {		
 		String fName  = "Salah", lName = "Dau_", uName = "Alzawie_";
@@ -17,7 +21,6 @@ public class UserRegistrationTest extends BaseClass {
 		lName  = lName  + randomAliasNumber;
 		uName  = uName  + randomAliasNumber;
 		uEmail = uEmail + randomAliasNumber + emailProvider;
-		//pWord  = getPassword();
 		
 		driver.findElement(By.className("register-link")).click();
 		
@@ -29,10 +32,13 @@ public class UserRegistrationTest extends BaseClass {
 		
 		driver.findElement(By.id("user_password")).sendKeys(pWord);
 		driver.findElement(By.id("user_password_confirmation")).sendKeys(pWord);
+
+		screenshot(screenshotLocation, folderName);
+		Thread.sleep(2500);
 		
 		driver.findElement(By.className("register-btn")).click();
-		
-		Thread.sleep(100000);
+		screenshot(screenshotLocation, folderName);
+		Thread.sleep(2000);
 		
 		logout();
 	}
