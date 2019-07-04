@@ -2,6 +2,11 @@ package seleniumTest;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.By;
@@ -11,7 +16,11 @@ import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
+import org.openqa.selenium.firefox.FirefoxProfile;
+import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
@@ -22,6 +31,9 @@ public class BaseClass {
 	protected static String firefoxDriverName; //added this driver to project location
 	private static final String OS = System.getProperty("os.name").toLowerCase();
 	private String systemPlatform;
+	private DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss");
+	private LocalDateTime localDateTime = LocalDateTime.now();
+	private String date = dtf.format(localDateTime); 	
 
 	@BeforeTest
 	public void setup() {
@@ -30,13 +42,35 @@ public class BaseClass {
 		
 		//Firefox browser
 //		System.setProperty("webdriver.gecko.driver", firefoxDriverName);
-//		driver = new FirefoxDriver();
+//		
+//		FirefoxOptions options = new FirefoxOptions();
+//		options.addPreference("dom.webnotifications.enabled", true);
+//		options.addPreference("permissions.default.microphone", true);
+//		options.addPreference("permissions.default.camera", true);
+//		options.addArguments("--disable-infobars");
+//		options.addArguments("use-fake-ui-for-media-stream");
+//		options.addArguments("start-maximized");
+//		options.addArguments("--disable-extensions");
+//		driver = new FirefoxDriver(options);
+		
+		//driver = new FirefoxDriver();
+		
+		Map<String, Object> prefs = new HashMap<String, Object>();
+		
+		prefs.put("profile.default_content_setting_values.notifications", 1);
+		prefs.put("profile.default_content_setting_values.media_stream_mic", 1);
+		prefs.put("profile.default_content_setting_values.media_stream_camera", 1);
 		
 		//Chrome browser
 		System.setProperty("webdriver.chrome.driver", chromeDriverName);
-		driver = new ChromeDriver();
+		
+		ChromeOptions options = new ChromeOptions();
+		options.setExperimentalOption("prefs", prefs);
+		options.addArguments("start-maximized");
+		driver = new ChromeDriver(options);
 		
 		String url = "https://testing.staging-api.mindshare.io/";
+		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 		driver.get(url);
 
 	}
@@ -77,7 +111,6 @@ public class BaseClass {
 			break;
 		default: break;
 		}
-		
 	}
 
 	public void screenshot(String screenshotPath, String folderName) {
@@ -87,9 +120,9 @@ public class BaseClass {
 
 		switch (systemPlatform) {
 		case "_Win":	
-			parentFolderPath = screenshotPath + "\\" + browserInfo;
+			parentFolderPath = screenshotPath + "\\win_" + browserInfo;
 			parentFolder = new File(parentFolderPath);
-			childFolderPath = parentFolder + "\\" + folderName;
+			childFolderPath = parentFolder + "\\" + date + "-" + folderName + systemPlatform;
 			childFolder = new File(childFolderPath);
 
 			try {
@@ -98,16 +131,16 @@ public class BaseClass {
 			} finally {}
 
 			srcFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);	
-			filename = Long.toString(System.currentTimeMillis()) + systemPlatform;
+			filename = dtf.format(LocalDateTime.now()) + systemPlatform;
 			targetFile = new File(childFolderPath + "\\" + filename +".jpg");
 
 			break;
 
 		case "_Mac":
 			screenshotPath = screenshotPath.replace("\\", "/");
-			parentFolderPath = screenshotPath + "/" + browserInfo;
+			parentFolderPath = screenshotPath + "/mac_" + browserInfo;
 			parentFolder = new File(parentFolderPath);
-			childFolderPath = parentFolder + "/" + folderName;
+			childFolderPath = parentFolder + "/" + date + "-" + folderName + systemPlatform;
 			childFolder = new File(childFolderPath);
 
 			try {
@@ -115,8 +148,8 @@ public class BaseClass {
 				childFolder.mkdir();
 			} finally {}
 
-			srcFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);	
-			filename = Long.toString(System.currentTimeMillis()) + systemPlatform;
+			srcFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+			filename = dtf.format(LocalDateTime.now()) + systemPlatform;
 			targetFile = new File(childFolderPath + "/" + filename +".jpg");	
 
 			break;
@@ -144,8 +177,16 @@ public class BaseClass {
 	}
 
 	public void search(String keyword) {
+		
 		driver.findElement(By.id("search_name")).sendKeys(keyword);
-		driver.findElement(By.id("search_name")).sendKeys(Keys.RETURN);
+		driver.findElement(By.id("search_name")).sendKeys(Keys.ENTER);
+		
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
 	}
 	
     public int getRandomAlias() {

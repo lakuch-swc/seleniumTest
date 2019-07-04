@@ -5,7 +5,7 @@ import org.testng.annotations.Test;
 
 public class CallTest extends BaseClass {
 	
-	private String keyword = "selenium";
+	private String keyword = "ws002";
 	private String userName = "willisstudenttest+ws001@gmail.com";
 	private String userPassword = "1P@ssw0rd";
 	
@@ -19,11 +19,22 @@ public class CallTest extends BaseClass {
 		driver.findElement(By.className("fa-phone")).click();
 		driver.findElement(By.className("swal-button--accept")).click();
 		
+		// Takes about 40 seconds to connect
 		try {
-			Thread.sleep(30000);
+			Thread.sleep(60000);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			driver.findElement(By.className("fa-phone-slash")).click();
+		}
+		
+		//driver.findElement(By.className("fa-phone-slash")).click();
+		
+		try {
+			Thread.sleep(60000);
+		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+
 	}
 }
